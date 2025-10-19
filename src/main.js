@@ -4,6 +4,7 @@ import router from "./router";
 import { Toaster } from "vue-sonner";
 import "vue-sonner/style.css";
 import "./style.css";
+import "./theme.js";
 
 const app = createApp(App);
 

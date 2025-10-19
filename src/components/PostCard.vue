@@ -128,7 +128,7 @@
     <div class="p-4">
       <!-- Title -->
       <h3
-        class="text-xs md:text-lg font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors"
+        class="text-sm md:text-lg font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors"
       >
         {{ props.post.name }}
       </h3>
@@ -396,12 +396,6 @@ const categoryLabel = computed(() => {
   return props.post.category === "gif" ? "GIF" : "Image";
 });
 
-const categoryClass = computed(() => {
-  return props.post.category === "gif"
-    ? "bg-purple-500/90 text-white"
-    : "bg-green-500/90 text-white";
-});
-
 const categoryDotClass = computed(() => {
   return props.post.category === "gif" ? "bg-purple-500" : "bg-green-500";
 });
@@ -439,25 +433,36 @@ const openModal = () => {
   showModal.value = true;
 };
 
-const downloadMedia = async () => {
+const downloadMedia = () => {
   try {
-    const response = await fetch(props.post.url);
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
+    // Get file extension from URL or use category
+    let extension = "jpg";
+    const url = props.post.url.toLowerCase();
 
-    const extension = props.post.category === "gif" ? "gif" : "jpg";
-    link.download = `${props.post.name
+    if (props.post.category === "gif") {
+      extension = "gif";
+    } else if (url.includes(".png")) {
+      extension = "png";
+    } else if (url.includes(".jpeg") || url.includes(".jpg")) {
+      extension = "jpg";
+    } else if (url.includes(".webp")) {
+      extension = "webp";
+    }
+
+    // Create filename
+    const filename = `${props.post.name
       .replace(/[^a-z0-9]/gi, "_")
       .toLowerCase()}.${extension}`;
+
+    // Create and trigger download
+    const link = document.createElement("a");
+    link.href = props.post.url;
+    link.download = filename;
+    link.target = "_blank";
 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-
-    toast.success("Download started!");
   } catch (error) {
     console.error("Download failed:", error);
     toast.error("Download failed. Please try again.");

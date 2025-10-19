@@ -5,10 +5,10 @@
       <h1
         class="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 dark:from-green-400 dark:to-emerald-300 bg-clip-text text-transparent mb-3"
       >
-        Edit Post
+        Edit Meme
       </h1>
       <p class="text-gray-600 dark:text-gray-400">
-        Update your post information and media
+        Update your meme information and media
       </p>
     </div>
 

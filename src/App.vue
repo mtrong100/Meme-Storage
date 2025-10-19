@@ -4,7 +4,7 @@
   >
     <Navbar />
 
-    <main class="flex-grow p-4 sm:p-6 lg:p-8">
+    <main class="flex-grow p-2 sm:p-6 lg:p-8">
       <div class="container w-full mx-auto">
         <RouterView />
       </div>
@@ -30,7 +30,7 @@
             <span class="hidden sm:inline">Built with</span>
             <div class="flex items-center space-x-3">
               <span
-                class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded text-xs font-medium"
+                class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-xs font-medium"
                 >Vue</span
               >
               <span
@@ -42,9 +42,9 @@
         </div>
       </div>
     </footer>
-
-    <Toaster position="bottom-right" rich-colors="true" />
   </div>
+
+  <Toaster position="bottom-right" rich-colors="true" />
 </template>
 
 <script setup>

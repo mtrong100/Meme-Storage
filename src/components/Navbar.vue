@@ -53,23 +53,7 @@
           </router-link>
 
           <!-- Theme Switcher -->
-          <div class="relative ml-2">
-            <button
-              @click="toggleTheme"
-              class="p-2.5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-700 text-gray-700 dark:text-gray-200 hover:from-green-100 hover:to-emerald-100 dark:hover:from-gray-700 dark:hover:to-gray-600 shadow-sm hover:shadow transition-all duration-300 group"
-              :title="`Switch to ${nextTheme} mode`"
-            >
-              <component
-                :is="icon"
-                class="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
-              />
-            </button>
-            <span
-              class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 text-xs text-green-600 dark:text-green-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-            >
-              {{ nextTheme }}
-            </span>
-          </div>
+          <ThemeToggle />
         </div>
 
         <!-- Mobile Menu Button -->
@@ -100,7 +84,7 @@
     <!-- Mobile Menu -->
     <div
       v-if="open"
-      class="md:hidden border-t border-green-100/50 dark:border-green-800/50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl transition-all duration-300 overflow-hidden"
+      class="md:hidden border-t border-green-100/50 dark:border-green-800/50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl transition-all duration-300"
       :class="open ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'"
     >
       <div class="flex flex-col space-y-1 px-4 py-3">
@@ -115,58 +99,26 @@
           {{ item.name }}
         </router-link>
 
-        <button
-          @click="toggleTheme"
-          class="flex items-center justify-center gap-3 px-4 py-3 mt-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-sm hover:shadow"
-        >
-          <component :is="icon" class="w-5 h-5" />
-          <span>Switch to {{ nextTheme }}</span>
-        </button>
+        <!-- Mobile Theme Toggle -->
+        <div class="mt-2">
+          <ThemeToggle mobile />
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
-import { Moon, Sun, Monitor } from "lucide-vue-next";
+import { ref, watch } from "vue";
+import ThemeToggle from "./ThemeToggle.vue";
 
 const open = ref(false);
-const theme = ref(localStorage.getItem("theme") || "system");
 
 const navItems = [
   { name: "Home", path: "/" },
-  { name: "Create Post", path: "/create" },
+  { name: "Upload", path: "/create" },
   { name: "Manage", path: "/manage" },
 ];
-
-const icon = computed(() => {
-  if (theme.value === "dark") return Sun;
-  if (theme.value === "light") return Moon;
-  return Monitor;
-});
-
-const nextTheme = computed(() =>
-  theme.value === "dark" ? "light" : theme.value === "light" ? "system" : "dark"
-);
-
-const applyTheme = () => {
-  const html = document.documentElement;
-  if (theme.value === "system") {
-    html.classList.toggle(
-      "dark",
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
-  } else {
-    html.classList.toggle("dark", theme.value === "dark");
-  }
-};
-
-const toggleTheme = () => {
-  theme.value = nextTheme.value;
-  localStorage.setItem("theme", theme.value);
-  applyTheme();
-};
 
 // Close mobile menu when route changes
 watch(
@@ -179,6 +131,4 @@ watch(
     }
   }
 );
-
-onMounted(applyTheme);
 </script>

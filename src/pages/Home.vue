@@ -6,13 +6,13 @@
     >
       <div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-          Discover Posts
+          Discover Memes
         </h1>
         <p class="text-gray-600 dark:text-gray-400 mt-1">
           {{
             loading
               ? "Loading..."
-              : `${filteredPosts.length} post${
+              : `${filteredPosts.length} meme${
                   filteredPosts.length !== 1 ? "s" : ""
                 } found`
           }}
@@ -133,15 +133,15 @@
     <!-- Skeleton Loading -->
     <div
       v-if="loading"
-      class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-10"
+      class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-10"
     >
-      <PostCardSkeleton v-for="n in 10" :key="n" />
+      <PostCardSkeleton v-for="n in 20" :key="n" />
     </div>
 
     <!-- Posts Grid -->
     <div
       v-else-if="filteredPosts.length"
-      class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-10"
+      class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-10"
     >
       <PostCard v-for="post in filteredPosts" :key="post.id" :post="post" />
     </div>

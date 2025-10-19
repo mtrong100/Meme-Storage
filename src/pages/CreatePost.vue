@@ -5,7 +5,7 @@
       <h1
         class="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 dark:from-green-400 dark:to-emerald-300 bg-clip-text text-transparent mb-3"
       >
-        Create New Post
+        Upload New Meme
       </h1>
       <p class="text-gray-600 dark:text-gray-400">
         Share your favorite images and GIFs with the community
@@ -36,7 +36,7 @@
                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
               />
             </svg>
-            Post Name
+            Name
           </label>
           <input
             v-model="name"
@@ -257,7 +257,7 @@
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          {{ isSubmitting ? "Creating Post..." : "Create Post" }}
+          {{ isSubmitting ? "Uploading Meme..." : "Upload Meme" }}
         </button>
       </form>
     </div>
