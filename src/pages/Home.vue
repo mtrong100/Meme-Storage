@@ -1,5 +1,5 @@
 <template>
-  <section class="mx-auto space-y-6">
+  <section class="space-y-6">
     <!-- Header with Stats -->
     <div
       class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
@@ -133,7 +133,7 @@
     <!-- Skeleton Loading -->
     <div
       v-if="loading"
-      class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-10"
+      class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-5"
     >
       <PostCardSkeleton v-for="n in 20" :key="n" />
     </div>
@@ -141,7 +141,7 @@
     <!-- Posts Grid -->
     <div
       v-else-if="filteredPosts.length"
-      class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-10"
+      class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2 mt-5"
     >
       <PostCard v-for="post in filteredPosts" :key="post.id" :post="post" />
     </div>

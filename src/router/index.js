@@ -15,6 +15,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      // Cuộn lên đầu khi chuyển trang
+      return { top: 0, behavior: "smooth" }; // hoặc bỏ 'behavior' nếu muốn cuộn ngay lập tức
+    }
+  },
 });
 
 export default router;

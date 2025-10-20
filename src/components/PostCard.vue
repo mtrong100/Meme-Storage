@@ -210,16 +210,6 @@
         </button>
       </div>
     </div>
-
-    <!-- Loading State -->
-    <div
-      v-if="loading"
-      class="absolute inset-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm flex items-center justify-center"
-    >
-      <div
-        class="animate-spin w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full"
-      ></div>
-    </div>
   </article>
 
   <!-- Post Modal -->
