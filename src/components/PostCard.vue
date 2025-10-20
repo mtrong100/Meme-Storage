@@ -125,10 +125,10 @@
     </div>
 
     <!-- Content -->
-    <div class="p-4">
+    <div class="p-3">
       <!-- Title -->
       <h3
-        class="text-sm md:text-lg font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors"
+        class="text-xs md:text-base font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors capitalize"
       >
         {{ props.post.name }}
       </h3>
@@ -151,7 +151,7 @@
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
-          <span>{{ formattedDate }}</span>
+          <span class="md:text-base text-xs">{{ formattedDate }}</span>
         </div>
 
         <div
@@ -159,17 +159,19 @@
           :title="`${props.post.category?.toUpperCase()} file`"
         >
           <div class="w-2 h-2 rounded-full" :class="categoryDotClass"></div>
-          <span class="font-medium" :class="categoryTextClass">{{
-            categoryLabel
-          }}</span>
+          <span
+            class="font-medium md:text-base text-xs"
+            :class="categoryTextClass"
+            >{{ categoryLabel }}</span
+          >
         </div>
       </div>
 
       <!-- Mobile Action Buttons -->
-      <div class="flex justify-center flex-col gap-2 mt-4 sm:hidden">
+      <div class="flex justify-center gap-2 mt-4 sm:hidden">
         <button
           @click="downloadMedia"
-          class="flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm"
+          class="flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm w-full"
         >
           <svg
             class="w-4 h-4"
@@ -184,12 +186,12 @@
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
             />
           </svg>
-          <span>Download</span>
+          <!-- <span>Download</span> -->
         </button>
 
         <button
           @click="copyUrl"
-          class="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
+          class="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm w-full"
         >
           <svg
             class="w-4 h-4"
@@ -204,7 +206,7 @@
               d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
             />
           </svg>
-          <span>Copy URL</span>
+          <!-- <span>Copy URL</span> -->
         </button>
       </div>
     </div>
@@ -239,7 +241,7 @@
           >
             {{ props.post.name }}
           </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
             {{ categoryLabel }} • {{ formattedDate }}
           </p>
         </div>
@@ -414,17 +416,10 @@ const formattedDate = computed(() => {
   else if (t instanceof Date) d = t;
   else if (typeof t === "string") d = new Date(t);
 
-  const now = new Date();
-  const diffTime = Math.abs(now - d);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 1) return "Today";
-  if (diffDays === 2) return "Yesterday";
-  if (diffDays <= 7) return `${diffDays - 1} days ago`;
-
+  // ✅ Format as dd/mm/yyyy
   return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
+    day: "2-digit",
+    month: "2-digit",
     year: "numeric",
   });
 });

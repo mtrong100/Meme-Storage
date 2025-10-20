@@ -4,7 +4,7 @@
   >
     <Navbar />
 
-    <main class="flex-grow p-2 sm:p-6 lg:p-8">
+    <main class="flex-grow px-2 py-6 sm:p-6 lg:p-8">
       <div class="container w-full mx-auto">
         <RouterView />
       </div>

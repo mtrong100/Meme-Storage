@@ -58,64 +58,26 @@
     </div>
   </div>
 
-  <!-- Mobile Version - Custom Styled -->
+  <!-- Mobile Version - Using Native Select -->
   <div v-else class="w-full">
-    <div class="space-y-3">
-      <div class="flex items-center justify-between">
-        <span class="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >Theme</span
-        >
-        <span class="text-xs text-green-600 dark:text-green-400 capitalize">{{
-          theme
-        }}</span>
-      </div>
-
-      <!-- Custom Radio Group -->
-      <div
-        class="grid grid-cols-1 gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg p-2"
+    <div class="space-y-2">
+      <label class="text-sm font-medium text-gray-700 dark:text-gray-300 block">
+        Theme
+      </label>
+      <select
+        v-model="theme"
+        @change="setTheme(theme)"
+        class="w-full px-3 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 appearance-none"
       >
-        <div
+        <option
           v-for="option in themeOptions"
           :key="option.value"
-          class="relative"
+          :value="option.value"
+          class="py-2"
         >
-          <input
-            :id="`theme-${option.value}-mobile`"
-            type="radio"
-            :value="option.value"
-            v-model="theme"
-            @change="setTheme(option.value)"
-            class="absolute opacity-0 w-0 h-0"
-          />
-          <label
-            :for="`theme-${option.value}-mobile`"
-            class="w-full flex items-center space-x-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200 text-left cursor-pointer group"
-            :class="{
-              'bg-white dark:bg-gray-700 shadow-sm border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300':
-                theme === option.value,
-              'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50':
-                theme !== option.value,
-            }"
-          >
-            <div class="flex items-center justify-center w-5 h-5">
-              <component
-                :is="option.icon"
-                class="w-4 h-4 transition-colors"
-                :class="{
-                  'text-green-600 dark:text-green-400': theme === option.value,
-                  'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300':
-                    theme !== option.value,
-                }"
-              />
-            </div>
-            <span class="flex-1 font-medium">{{ option.label }}</span>
-            <div
-              v-if="theme === option.value"
-              class="w-2 h-2 bg-green-500 rounded-full"
-            ></div>
-          </label>
-        </div>
-      </div>
+          {{ option.label }}
+        </option>
+      </select>
     </div>
   </div>
 </template>
