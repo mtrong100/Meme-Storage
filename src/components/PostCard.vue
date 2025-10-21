@@ -137,7 +137,7 @@
       <div
         class="flex items-center justify-between mt-3 text-gray-600 dark:text-gray-400 md:text-base text-xs"
       >
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-1">
           <svg
             class="w-4 h-4"
             fill="none"
@@ -158,11 +158,9 @@
           class="flex items-center space-x-1"
           :title="`${props.post.category?.toUpperCase()} file`"
         >
-          <div class="w-2 h-2 rounded-full" :class="categoryDotClass"></div>
           <span
-            class="font-medium md:text-base text-xs"
-            :class="categoryTextClass"
-            >{{ categoryLabel }}</span
+            class="font-medium md:text-base text-xs text-green-600 dark:text-green-400 capitalize"
+            >{{ props.post.subCategory }}</span
           >
         </div>
       </div>
@@ -386,16 +384,6 @@ const handleModalImageError = (event) => {
 
 const categoryLabel = computed(() => {
   return props.post.category === "gif" ? "GIF" : "Image";
-});
-
-const categoryDotClass = computed(() => {
-  return props.post.category === "gif" ? "bg-purple-500" : "bg-green-500";
-});
-
-const categoryTextClass = computed(() => {
-  return props.post.category === "gif"
-    ? "text-purple-600 dark:text-purple-400"
-    : "text-green-600 dark:text-green-400";
 });
 
 const formattedDate = computed(() => {

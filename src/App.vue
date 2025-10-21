@@ -44,7 +44,7 @@
     </footer>
   </div>
 
-  <Toaster position="bottom-right" rich-colors="true" />
+  <Toaster position="bottom-right" richColors />
 </template>
 
 <script setup>

@@ -28,7 +28,7 @@
                 </svg>
               </div>
               <span
-                class="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 dark:from-green-400 dark:to-emerald-300 bg-clip-text text-transparent"
+                class="text-sm md:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 dark:from-green-400 dark:to-emerald-300 bg-clip-text text-transparent"
               >
                 Meme Storage
               </span>
@@ -56,28 +56,42 @@
           <ThemeToggle />
         </div>
 
+        <!-- Language Switcher -->
+        <div>
+          <GoogleTranslateSelect
+            default-language-code="en"
+            default-page-language-code="en"
+            :fetch-browser-language="false"
+            trigger="click"
+            @select="handleGoogleTranslateSelect"
+            class="dark:text-white"
+          />
+        </div>
+
         <!-- Mobile Menu Button -->
-        <button
-          class="md:hidden p-2.5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-700 text-green-600 dark:text-green-400 hover:from-green-100 hover:to-emerald-100 dark:hover:from-gray-700 dark:hover:to-gray-600 shadow-sm hover:shadow transition-all duration-300"
-          @click="open = !open"
-          :aria-expanded="open"
-          aria-label="Toggle navigation menu"
-        >
-          <div class="relative w-6 h-6">
-            <span
-              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-0.5 bg-current rounded-full transition-all duration-300"
-              :class="open ? 'rotate-45' : '-translate-y-1.5'"
-            ></span>
-            <span
-              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-0.5 bg-current rounded-full transition-all duration-300"
-              :class="open ? 'opacity-0' : 'opacity-100'"
-            ></span>
-            <span
-              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-0.5 bg-current rounded-full transition-all duration-300"
-              :class="open ? '-rotate-45' : 'translate-y-1.5'"
-            ></span>
-          </div>
-        </button>
+        <div class="flex items-center space-x-2 md:hidden">
+          <button
+            class="p-2.5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-700 text-green-600 dark:text-green-400 hover:from-green-100 hover:to-emerald-100 dark:hover:from-gray-700 dark:hover:to-gray-600 shadow-sm hover:shadow transition-all duration-300"
+            @click="open = !open"
+            :aria-expanded="open"
+            aria-label="Toggle navigation menu"
+          >
+            <div class="relative w-6 h-6">
+              <span
+                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-0.5 bg-current rounded-full transition-all duration-300"
+                :class="open ? 'rotate-45' : '-translate-y-1.5'"
+              ></span>
+              <span
+                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-0.5 bg-current rounded-full transition-all duration-300"
+                :class="open ? 'opacity-0' : 'opacity-100'"
+              ></span>
+              <span
+                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-0.5 bg-current rounded-full transition-all duration-300"
+                :class="open ? '-rotate-45' : 'translate-y-1.5'"
+              ></span>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -111,14 +125,19 @@
 <script setup>
 import { ref, watch } from "vue";
 import ThemeToggle from "./ThemeToggle.vue";
+import GoogleTranslateSelect from "@google-translate-select/vue3";
 
 const open = ref(false);
 
 const navItems = [
   { name: "Home", path: "/" },
-  { name: "Upload", path: "/create" },
+  { name: "Upload Meme", path: "/create" },
   { name: "Manage", path: "/manage" },
 ];
+
+const handleGoogleTranslateSelect = (language) => {
+  console.log(language);
+};
 
 // Close mobile menu when route changes
 watch(

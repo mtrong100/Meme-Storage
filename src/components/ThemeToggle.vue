@@ -27,7 +27,7 @@
 
       <!-- Dropdown Menu -->
       <div
-        class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 backdrop-blur-lg"
+        class="absolute right-0 top-full mt-2 w-38 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 backdrop-blur-lg"
       >
         <div class="p-2 space-y-1">
           <button
@@ -41,17 +41,8 @@
               'text-gray-700 dark:text-gray-300': theme !== option.value,
             }"
           >
-            <div class="w-4 h-4 flex items-center justify-center">
-              <div
-                v-if="theme === option.value"
-                class="w-2 h-2 bg-green-500 rounded-full"
-              ></div>
-            </div>
             <component :is="option.icon" class="w-4 h-4" />
             <span class="flex-1">{{ option.label }}</span>
-            <span class="text-xs text-gray-500 dark:text-gray-400 capitalize">{{
-              option.value
-            }}</span>
           </button>
         </div>
       </div>

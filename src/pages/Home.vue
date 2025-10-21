@@ -5,7 +5,7 @@
       class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
     >
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
           Discover Memes
         </h1>
         <p class="text-gray-600 dark:text-gray-400 mt-1">
@@ -79,6 +79,24 @@
           </select>
         </div>
 
+        <!-- Sub Category Filter -->
+        <div class="sm:w-48">
+          <select
+            v-model="selectedSubCategory"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+          >
+            <option value="all">All Sub Categories</option>
+            <option
+              v-for="subCat in availableSubCategories"
+              :key="subCat"
+              :value="subCat"
+              class="capitalize"
+            >
+              {{ subCat }}
+            </option>
+          </select>
+        </div>
+
         <!-- Sort Options -->
         <div class="sm:w-40">
           <select
@@ -97,7 +115,7 @@
           class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
           :disabled="!hasActiveFilters"
         >
-          Clear
+          Clear Filter
         </button>
       </div>
 
@@ -123,6 +141,18 @@
           <button
             @click="selectedCategory = 'all'"
             class="ml-1 hover:text-green-600"
+          >
+            ×
+          </button>
+        </span>
+        <span
+          v-if="selectedSubCategory !== 'all'"
+          class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300"
+        >
+          Sub Category: {{ selectedSubCategory }}
+          <button
+            @click="selectedSubCategory = 'all'"
+            class="ml-1 hover:text-orange-600"
           >
             ×
           </button>
@@ -207,12 +237,18 @@ import { getDocs, orderBy, query } from "firebase/firestore";
 import { postsCollection } from "../config/firebase";
 import PostCard from "../components/PostCard.vue";
 import PostCardSkeleton from "../components/PostCardSkeleton.vue";
+import { SUB_CATEGORY } from "../constants";
 
 const posts = ref([]);
 const searchQuery = ref("");
 const selectedCategory = ref("all");
+const selectedSubCategory = ref("all");
 const sortBy = ref("newest");
 const loading = ref(true);
+
+const availableSubCategories = computed(() => {
+  return [...SUB_CATEGORY].sort();
+});
 
 const categoryCounts = computed(() => {
   const counts = { image: 0, gif: 0 };
@@ -242,6 +278,13 @@ const filteredPosts = computed(() => {
     );
   }
 
+  // Sub Category filter
+  if (selectedSubCategory.value !== "all") {
+    filtered = filtered.filter(
+      (post) => post.subCategory === selectedSubCategory.value
+    );
+  }
+
   // Sort
   switch (sortBy.value) {
     case "newest":
@@ -267,12 +310,17 @@ const filteredPosts = computed(() => {
 });
 
 const hasActiveFilters = computed(() => {
-  return searchQuery.value !== "" || selectedCategory.value !== "all";
+  return (
+    searchQuery.value !== "" ||
+    selectedCategory.value !== "all" ||
+    selectedSubCategory.value !== "all"
+  );
 });
 
 const clearFilters = () => {
   searchQuery.value = "";
   selectedCategory.value = "all";
+  selectedSubCategory.value = "all";
 };
 
 onMounted(async () => {

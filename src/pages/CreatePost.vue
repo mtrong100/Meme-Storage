@@ -182,6 +182,46 @@
           </div>
         </div>
 
+        <!-- Sub Category Field -->
+        <div>
+          <label
+            class="flex items-center text-sm font-medium mb-3 text-gray-700 dark:text-gray-200"
+          >
+            <svg
+              class="w-4 h-4 mr-2 text-green-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
+            Sub Category
+          </label>
+          <select
+            v-model="subCategory"
+            required
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white transition-all duration-200 capitalize"
+          >
+            <option value="" disabled selected>Select a sub category</option>
+            <option
+              v-for="subCat in sortedSubCategories"
+              :key="subCat"
+              :value="subCat"
+              class="capitalize bg-white dark:bg-gray-700"
+            >
+              {{ subCat }}
+            </option>
+          </select>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            Choose a sub category for your post
+          </p>
+        </div>
+
         <!-- Preview Section -->
         <div v-if="url">
           <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
@@ -265,17 +305,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { addDoc } from "firebase/firestore";
 import { postsCollection } from "../config/firebase";
 import { toast } from "vue-sonner";
 import { useRouter } from "vue-router";
+import { SUB_CATEGORY } from "../constants";
 
 const router = useRouter();
 const name = ref("");
 const url = ref("");
 const category = ref("image");
+const subCategory = ref("");
 const isSubmitting = ref(false);
+
+const sortedSubCategories = computed(() => {
+  return [...SUB_CATEGORY].sort();
+});
 
 const handleImageError = () => {
   toast.error("Failed to load preview. Please check your URL.");
@@ -291,6 +337,7 @@ const createPost = async () => {
       name: name.value.trim(),
       url: url.value.trim(),
       category: category.value,
+      subCategory: subCategory.value,
       createdAt: new Date(),
     });
 
@@ -300,6 +347,7 @@ const createPost = async () => {
     name.value = "";
     url.value = "";
     category.value = "image";
+    subCategory.value = "";
   } catch (err) {
     console.error(err);
     toast.error("Failed to create post. Please try again.");

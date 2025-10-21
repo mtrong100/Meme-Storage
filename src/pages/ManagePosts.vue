@@ -71,6 +71,24 @@
           </select>
         </div>
 
+        <!-- Sub Category Filter -->
+        <div class="lg:w-48">
+          <select
+            v-model="selectedSubCategory"
+            class="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+          >
+            <option value="all">All Sub Categories</option>
+            <option
+              v-for="subCat in availableSubCategories"
+              :key="subCat"
+              :value="subCat"
+              class="capitalize"
+            >
+              {{ subCat }}
+            </option>
+          </select>
+        </div>
+
         <!-- Sort Options -->
         <div class="lg:w-48">
           <select
@@ -81,6 +99,7 @@
             <option value="oldest">Oldest First</option>
             <option value="name">Name A-Z</option>
             <option value="category">Category</option>
+            <option value="subCategory">Sub Category</option>
           </select>
         </div>
 
@@ -119,6 +138,18 @@
           <button
             @click="selectedCategory = 'all'"
             class="ml-2 hover:text-green-600"
+          >
+            ×
+          </button>
+        </span>
+        <span
+          v-if="selectedSubCategory !== 'all'"
+          class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300"
+        >
+          Sub Category: {{ selectedSubCategory }}
+          <button
+            @click="selectedSubCategory = 'all'"
+            class="ml-2 hover:text-orange-600"
           >
             ×
           </button>
@@ -248,6 +279,11 @@
               <th
                 class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"
               >
+                Sub Category
+              </th>
+              <th
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+              >
                 Created
               </th>
               <th
@@ -302,6 +338,15 @@
                   "
                 >
                   {{ post.category === "gif" ? "GIF" : "Image" }}
+                </span>
+              </td>
+
+              <!-- Sub Category -->
+              <td class="px-6 py-4">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 capitalize"
+                >
+                  {{ post.subCategory }}
                 </span>
               </td>
 
@@ -457,6 +502,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { toast } from "vue-sonner";
+import { SUB_CATEGORY } from "../constants";
 
 const posts = ref([]);
 const loading = ref(true);
@@ -465,13 +511,19 @@ const postToDelete = ref(null);
 const deleting = ref(false);
 const searchQuery = ref("");
 const selectedCategory = ref("all");
+const selectedSubCategory = ref("all");
 const sortBy = ref("newest");
+
+const availableSubCategories = computed(() => {
+  return [...SUB_CATEGORY].sort();
+});
 
 const sortLabels = {
   newest: "Newest First",
   oldest: "Oldest First",
   name: "Name A-Z",
   category: "Category",
+  subCategory: "Sub Category",
 };
 
 const filteredPosts = computed(() => {
@@ -491,6 +543,13 @@ const filteredPosts = computed(() => {
   if (selectedCategory.value !== "all") {
     filtered = filtered.filter(
       (post) => post.category === selectedCategory.value
+    );
+  }
+
+  // Sub Category filter
+  if (selectedSubCategory.value !== "all") {
+    filtered = filtered.filter(
+      (post) => post.subCategory === selectedSubCategory.value
     );
   }
 
@@ -518,6 +577,11 @@ const filteredPosts = computed(() => {
         (a.category || "").localeCompare(b.category || "")
       );
       break;
+    case "subCategory":
+      filtered = [...filtered].sort((a, b) =>
+        (a.subCategory || "").localeCompare(b.subCategory || "")
+      );
+      break;
   }
 
   return filtered;
@@ -527,6 +591,7 @@ const hasActiveFilters = computed(() => {
   return (
     searchQuery.value !== "" ||
     selectedCategory.value !== "all" ||
+    selectedSubCategory.value !== "all" ||
     sortBy.value !== "newest"
   );
 });
@@ -534,6 +599,7 @@ const hasActiveFilters = computed(() => {
 const clearFilters = () => {
   searchQuery.value = "";
   selectedCategory.value = "all";
+  selectedSubCategory.value = "all";
   sortBy.value = "newest";
 };
 
