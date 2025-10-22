@@ -71,7 +71,7 @@
         <div class="sm:w-48">
           <select
             v-model="selectedCategory"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all capitalize"
           >
             <option value="all">All Categories</option>
             <option value="image">Images</option>
@@ -83,7 +83,7 @@
         <div class="sm:w-48">
           <select
             v-model="selectedSubCategory"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all capitalize"
           >
             <option value="all">All Sub Categories</option>
             <option
@@ -101,7 +101,7 @@
         <div class="sm:w-40">
           <select
             v-model="sortBy"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all capitalize"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -234,12 +234,12 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { getDocs, orderBy, query } from "firebase/firestore";
-import { postsCollection } from "../config/firebase";
+import { postsCollection, subCategoriesCollection } from "../config/firebase";
 import PostCard from "../components/PostCard.vue";
 import PostCardSkeleton from "../components/PostCardSkeleton.vue";
-import { SUB_CATEGORY } from "../constants";
 
 const posts = ref([]);
+const subCategories = ref([]);
 const searchQuery = ref("");
 const selectedCategory = ref("all");
 const selectedSubCategory = ref("all");
@@ -247,7 +247,10 @@ const sortBy = ref("newest");
 const loading = ref(true);
 
 const availableSubCategories = computed(() => {
-  return [...SUB_CATEGORY].sort();
+  // Extract names from subcategories and sort them alphabetically
+  return subCategories.value
+    .map((subCat) => subCat.name)
+    .sort((a, b) => a.localeCompare(b));
 });
 
 const categoryCounts = computed(() => {
@@ -325,15 +328,26 @@ const clearFilters = () => {
 
 onMounted(async () => {
   try {
-    const q = query(postsCollection, orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
-    posts.value = snapshot.docs.map((doc) => ({
+    // Fetch posts and subcategories concurrently
+    const [postsSnapshot, subCategoriesSnapshot] = await Promise.all([
+      getDocs(query(postsCollection, orderBy("createdAt", "desc"))),
+      getDocs(subCategoriesCollection),
+    ]);
+
+    // Process posts data
+    posts.value = postsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
       createdAt: doc.data().createdAt,
     }));
+
+    // Process subcategories data
+    subCategories.value = subCategoriesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
   } catch (error) {
-    console.error("Error loading posts:", error);
+    console.error("Error loading data:", error);
   } finally {
     loading.value = false;
   }

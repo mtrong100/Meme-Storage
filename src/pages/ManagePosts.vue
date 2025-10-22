@@ -63,7 +63,7 @@
         <div class="lg:w-48">
           <select
             v-model="selectedCategory"
-            class="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+            class="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all capitalize"
           >
             <option value="all">All Categories</option>
             <option value="image">Images</option>
@@ -75,7 +75,7 @@
         <div class="lg:w-48">
           <select
             v-model="selectedSubCategory"
-            class="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+            class="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all capitalize"
           >
             <option value="all">All Sub Categories</option>
             <option
@@ -93,7 +93,7 @@
         <div class="lg:w-48">
           <select
             v-model="sortBy"
-            class="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+            class="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all capitalize"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -500,11 +500,11 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { db } from "../config/firebase";
+import { db, subCategoriesCollection } from "../config/firebase";
 import { toast } from "vue-sonner";
-import { SUB_CATEGORY } from "../constants";
 
 const posts = ref([]);
+const subCategories = ref([]);
 const loading = ref(true);
 const showDeleteModal = ref(false);
 const postToDelete = ref(null);
@@ -515,7 +515,10 @@ const selectedSubCategory = ref("all");
 const sortBy = ref("newest");
 
 const availableSubCategories = computed(() => {
-  return [...SUB_CATEGORY].sort();
+  // Extract names from subcategories and sort them alphabetically
+  return subCategories.value
+    .map((subCat) => subCat.name)
+    .sort((a, b) => a.localeCompare(b));
 });
 
 const sortLabels = {
@@ -659,9 +662,21 @@ const deletePost = async () => {
 const fetchPosts = async () => {
   try {
     loading.value = true;
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-    const querySnapshot = await getDocs(q);
-    posts.value = querySnapshot.docs.map((doc) => ({
+
+    // Fetch posts and subcategories concurrently
+    const [postsSnapshot, subCategoriesSnapshot] = await Promise.all([
+      getDocs(query(collection(db, "posts"), orderBy("createdAt", "desc"))),
+      getDocs(subCategoriesCollection),
+    ]);
+
+    // Process posts data
+    posts.value = postsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    // Process subcategories data
+    subCategories.value = subCategoriesSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));

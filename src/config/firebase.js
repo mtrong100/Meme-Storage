@@ -13,5 +13,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const postsCollection = collection(db, "posts");
+const subCategoriesCollection = collection(db, "subCategories");
 
-export { db, postsCollection };
+export { db, postsCollection, subCategoriesCollection };
